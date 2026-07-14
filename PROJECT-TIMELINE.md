@@ -18,3 +18,13 @@ The arduino connections to the breadboard and LEDs was all done on a software ca
 
 The sequence of lights signals and times was researched online and this will be the base model that we will compare results such as througout of cars, efficiency, waitime and such with the improved computer vision/FPGA AI solution.
 
+## 2. Identifying the cars and lanes
+The next item that was completed was introducing a simple lightweight yolov8 nano model. This would be the camera and image detection software. We use the computers basic camera to get input for the model and identify through the python code what the object is.
+
+Only cars were detected since there are other objects we are not concerned with
+
+Next we need to only detect cars in the particularly drawn lanes. This means we need to define boundaries where the cars should be. Through inspection it was clear that we could just divide the entire map into quadrants and it would align with the lanes. The center point of the bounding boxes for the cars where used as reference points to determine if the car was in that particular lane and we keep track of how many cars are in each lane.
+
+An image of this being tested can be seen in **Compute-Vision_files/Identifying_Lanes_Cars.png**.
+
+## 3.
