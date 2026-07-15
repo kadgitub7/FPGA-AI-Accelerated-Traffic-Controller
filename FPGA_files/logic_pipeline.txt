@@ -1,0 +1,31 @@
+Each 5 seconds we should look at the traffic
+We need to send over the 4 lane counts over UART to the FPGA
+The FPGA will take those values, and based on the current traffic light configuration make a change
+
+If there are only cars in opposite lanes then turn light green for them
+if there are more cars in one lane prioritize those but after some time you need to let the smaller number lane go as well
+if there are no cars just stat put in the same light level as previously
+If there is equal number of cars there then let right side go first then left side
+if there is too many cars lined up do 10s one side 10s other side or something
+
+Scenarios:
+1) no cars in intersection
+2) 1 car in intersection
+3) 2 cars in intersection same lane/opposite lane
+4) 2 cars in intersection in opposing traffic lanes
+5) 2 cars in 1 lane, 1 car in opposing traffic lane
+6) 10 cars in 1 lane, 1 car in oppositng lane
+7) 2 cars in 1 lane, 2 cars in opposing traffic lane
+8) 2 cars in 1 lane, 1/2 cars in opposite lane, 2 cars in opposing traffic lane
+
+Ideal traffic control:
+1) No change to traffic light -> continue with what was previously used
+2) turn green for that 1 car(change if needed else stay)
+3) turn green for those cars(no conflict)
+4) turn green for right lane, then once crossed turn green for left lane and stay
+5) let 2 cars go first with green, then once they are gone turn green for the single car
+6) let single car go first then let all the other cars go
+7) right lane first then left lane
+8) let lane with more cars finishe then let other cars go
+
+-> Always total count is the opposite lanes combined because that is what is being targeted by a single light

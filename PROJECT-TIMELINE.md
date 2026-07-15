@@ -27,4 +27,5 @@ Next we need to only detect cars in the particularly drawn lanes. This means we 
 
 An image of this being tested can be seen in **Compute-Vision_files/Identifying_Lanes_Cars.png**.
 
-## 3.
+## 3. Logic mapping
+The logic for how we should control the traffic light in all possible scenarios is given, we need to create a condensed and simple algorithm for this now and to translate it to a Finite State Machine for the FPGA to control.
