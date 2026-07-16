@@ -29,3 +29,6 @@ An image of this being tested can be seen in **Compute-Vision_files/Identifying_
 
 ## 3. Logic mapping
 The logic for how we should control the traffic light in all possible scenarios is given, we need to create a condensed and simple algorithm for this now and to translate it to a Finite State Machine for the FPGA to control.
+
+## 4. FSM Design
+Started the preliminary logic for the FSM. After mapping out the different patterns and what the corresponding action should be, I have now started to map out exactly how the FSM will move, what variables are changed how we control the lights values from the inside here.

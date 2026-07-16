@@ -29,3 +29,14 @@ Ideal traffic control:
 8) let lane with more cars finishe then let other cars go
 
 -> Always total count is the opposite lanes combined because that is what is being targeted by a single light
+
+States:
+IDLE: Retain old value do not change signs
+SIGN_1_RED: lights 1 transition to red -> Used for scenarios where we have only one road filled
+SIGN_1_GREEN: lights 1 transition to green -> Used for scenarios where we have only one road filled
+YELLOW: transition state from green to red
+ALL_RED: 1 second of all read signals
+-> The scenarios where there is 2 cars in one lane and 1 car in other lanes will be broken up, basically one of the two above signls will be activated and then revert to idle and then next signal will be transitioned
+-> We should also know andd compare the number of cars and if there is an equal number in opposing lanes then we do right most first
+-> we also need a 10 seconds switch if there are multiple cars in multiple lanes to slowly let them through efficienty
+-> minimum green for 5 seconds
