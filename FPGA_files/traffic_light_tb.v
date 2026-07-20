@@ -18,8 +18,8 @@ module traffic_light_tb();
     always #5 clk = ~clk; // 100MHz clock
 
     initial begin
-        $monitor("Time: %0t | State: %0d | Dir: %b | GrnT: %0d | L1: %0d L2: %0d L3: %0d L4: %0d | Light1: %b Light2: %b",
-                 $time, uut.current_state, uut.direction, uut.green_timer,
+        $monitor("Time: %0t | Next_direction = %b| State: %0d | Dir: %b | GrnT: %0d | L1: %0d L2: %0d L3: %0d L4: %0d | Light1: %b Light2: %b",
+                 $time, uut.next_direction, uut.current_state, uut.direction, uut.green_timer,
                  lane1, lane2, lane3, lane4, light_1, light_2);
         clk = 0;
         reset = 1;
@@ -28,11 +28,14 @@ module traffic_light_tb();
         #20 reset = 0;
 
         // Test 1: No cars - stays IDLE, light_1 green
-        #200;
+        #600;
 
         // Test 2: Cars only in lane2 - needs to wait for MIN_GREEN before switching
         lane2 = 6'd1;
         #2000;
+        
+        lane2 = 6'd0;
+        #200;
 
         // Test 3: Small difference (1 car) - should NOT switch (below threshold)
         lane1 = 6'd2; lane2 = 6'd1; lane3 = 6'd0; lane4 = 6'd0;

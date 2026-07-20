@@ -58,13 +58,15 @@ module traffic_light(
                 green_timer <= 0;
 
             // Capture target direction when leaving IDLE
-            if (current_state == IDLE && next_state == YELLOW) begin
-                if (lane2 + lane4 > 0 && lane1 + lane3 == 0)
-                    next_direction <= 0;
-                else if (lane2 + lane4 > lane1 + lane3)
-                    next_direction <= 0;
-                else
-                    next_direction <= 1;
+            if (green_timer < MAX_GREEN) begin
+                if (current_state == IDLE && next_state == YELLOW) begin
+                    if (lane2 + lane4 > 0 && lane1 + lane3 == 0)
+                        next_direction <= 0;
+                    else if (lane2 + lane4 > lane1 + lane3)
+                        next_direction <= 0;
+                    else
+                        next_direction <= 1;
+                end
             end
 
             // Output logic
@@ -107,11 +109,16 @@ module traffic_light(
                     next_state = IDLE;
                 end else if (lane1 + lane2 + lane3 + lane4 == 0) begin
                     next_state = IDLE;
-                end else if (green_timer >= MAX_GREEN && (
-                    (direction && lane2 + lane4 > 0) ||
-                    (!direction && lane1 + lane3 > 0))) begin
-                    // Force switch to prevent starvation
+                end 
+                // Force switch to prevent starvation
+                else if(green_timer >= MAX_GREEN &&(direction && lane2 + lane4 > 0)) begin
                     next_state = YELLOW;
+                    next_direction = 1'b0;
+                end
+                
+                else if(green_timer >= MAX_GREEN &&(!direction && lane1 + lane3 > 0)) begin
+                    next_state = YELLOW;
+                    next_direction = 1'b1;
                 end else if (lane1 + lane3 > 0 && lane2 + lane4 == 0) begin
                     if (direction)
                         next_state = IDLE;
