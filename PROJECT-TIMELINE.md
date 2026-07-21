@@ -32,3 +32,9 @@ The logic for how we should control the traffic light in all possible scenarios 
 
 ## 4. FSM Design
 Started the preliminary logic for the FSM. After mapping out the different patterns and what the corresponding action should be, I have now started to map out exactly how the FSM will move, what variables are changed how we control the lights values from the inside here.
+
+## 5. Improving the traffic control
+I implemented new features like min green time and starvation period so that it is more robust and follows the mechanisms that we ideally want for the traffic light to follow. This part had a lot of issues since there were some issues pertaining to the starvation period and to resolve it took significant debugging and log checking
+
+## 6. UART control
+Now that we have a working traffic light detection system we need to hook up the conputer vision section to the FPGA and the FPGA to the Arduino UNO through UART.
