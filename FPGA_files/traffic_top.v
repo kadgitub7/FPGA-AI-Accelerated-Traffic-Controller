@@ -6,7 +6,7 @@ module traffic_top(
     output [1:0] light_1,
     output [1:0] light_2
 );
-    localparam CLKS_PER_BIT = 868;
+    localparam CLOCKS_PER_BIT = 868;
 
     // UART RX
     wire [7:0] rx_byte;
@@ -16,6 +16,16 @@ module traffic_top(
     wire        tx_active;
     wire        tx_serial;
     wire        tx_done;
+    
+    wire [7:0]   sender_tx_data;
+    wire         sender_tx_start;
+    wire         sender_done;
+    
+    wire dl_prediction_complete, dl_input_ready;
+    
+    wire [5:0] lane1, lane2, lane3, lane4;
+    
+    wire [1:0] light_1, light_2;
 
     traffic_light traffic_light_inst (
         .clk(clk),
@@ -25,15 +35,16 @@ module traffic_top(
         .lane3(lane3),
         .lane4(lane4),
         .light_1(light_1),
-        .light_2(light_2)
+        .light_2(light_2),
+        .dl_prediction_complete(dl_prediction_complete)
     );
 
-    uart_rx #(.CLKS_PER_BIT(CLKS_PER_BIT)) u_uart_rx (
+    uart_rx #(.CLKS_PER_BIT(CLOCKS_PER_BIT)) u_uart_rx (
         .i_Clock(clk), .i_Rx_Serial(rx_pin),
         .o_Rx_Byte(rx_byte), .o_Rx_DV(rx_byte_valid)
     );
 
-    uart_tx #(.CLKS_PER_BIT(CLKS_PER_BIT)) u_uart_tx (
+    uart_tx #(.CLKS_PER_BIT(CLOCKS_PER_BIT)) u_uart_tx (
         .i_Clock(clk), .i_Tx_DV(sender_tx_start), .i_Tx_Byte(sender_tx_data),
         .o_Tx_Active(tx_active), .o_Tx_Serial(tx_serial), .o_Tx_Done(tx_done)
     );
@@ -57,7 +68,6 @@ module traffic_top(
     );
 
     assign tx_pin       = tx_serial;
-    assign rx_pin = rx_pin;
 
 
 

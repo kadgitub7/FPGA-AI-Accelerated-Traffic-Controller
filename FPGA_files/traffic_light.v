@@ -6,7 +6,8 @@ module traffic_light(
     input [5:0] lane3,
     input [5:0] lane4,
     output [1:0] light_1,
-    output [1:0] light_2
+    output [1:0] light_2,
+    output dl_prediction_complete
 );
 
     reg [1:0] last_light_1, last_light_2;
@@ -14,9 +15,10 @@ module traffic_light(
     reg [29:0] green_timer;
     reg direction;      // 1 = light_1 green, 0 = light_2 green
     reg next_direction;  // target direction after yellow/all_red transition
-
-    localparam [29:0] MIN_GREEN = 29'd50;  // minimum green hold
-    localparam [29:0] MAX_GREEN = 29'd200; // force switch to prevent starvation
+    reg complete;
+    
+    localparam [29:0] MIN_GREEN = 29'd300000000;  // minimum green hold
+    localparam [29:0] MAX_GREEN = 30'd1000000000; // force switch to prevent starvation
     localparam [5:0]  SWITCH_THRESHOLD = 6'd2; // min car difference to justify switching
 
     localparam [2:0] IDLE         = 3'b000,
@@ -31,6 +33,7 @@ module traffic_light(
 
     assign light_1 = last_light_1;
     assign light_2 = last_light_2;
+    assign dl_prediction_complete = complete;
 
     // Sequential: state register, counter, direction tracking, and output logic
     always @(posedge clk) begin
@@ -68,18 +71,26 @@ module traffic_light(
                         next_direction <= 1;
                 end
             end
-
+            
+            if(green_timer >= MAX_GREEN &&(direction && lane2 + lane4 > 0)) begin
+                    next_direction <= 1'b0;
+            end else if(green_timer >= MAX_GREEN &&(!direction && lane1 + lane3 > 0)) begin
+                    next_direction <= 1'b1;
+            end else
+                next_direction <= next_direction;
             // Output logic
             case (next_state)
                 SIGN_1_GREEN: begin
                     last_light_1 <= 2'b10;
                     last_light_2 <= 2'b00;
                     direction <= 1;
+                    complete <= 1;
                 end
                 SIGN_1_RED: begin
                     last_light_1 <= 2'b00;
                     last_light_2 <= 2'b10;
                     direction <= 0;
+                    complete <= 1;
                 end
                 YELLOW: begin
                     if (direction) begin
@@ -89,10 +100,12 @@ module traffic_light(
                         last_light_1 <= 2'b00;
                         last_light_2 <= 2'b01;
                     end
+                    complete <= 1;
                 end
                 ALL_RED: begin
                     last_light_1 <= 2'b00;
                     last_light_2 <= 2'b00;
+                    complete <= 1;
                 end
                 // IDLE, WAIT_3: retain current light values
             endcase
@@ -113,12 +126,12 @@ module traffic_light(
                 // Force switch to prevent starvation
                 else if(green_timer >= MAX_GREEN &&(direction && lane2 + lane4 > 0)) begin
                     next_state = YELLOW;
-                    next_direction = 1'b0;
+                    //next_direction = 1'b0;
                 end
                 
                 else if(green_timer >= MAX_GREEN &&(!direction && lane1 + lane3 > 0)) begin
                     next_state = YELLOW;
-                    next_direction = 1'b1;
+                    //next_direction = 1'b1;
                 end else if (lane1 + lane3 > 0 && lane2 + lane4 == 0) begin
                     if (direction)
                         next_state = IDLE;
@@ -148,7 +161,7 @@ module traffic_light(
             YELLOW: next_state = WAIT_3;
 
             WAIT_3: begin
-                if (counter >= 29'd50)
+                if (counter >= 29'd300000000)
                     next_state = ALL_RED;
                 else
                     next_state = WAIT_3;
