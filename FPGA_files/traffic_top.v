@@ -8,11 +8,9 @@ module traffic_top(
 );
     localparam CLOCKS_PER_BIT = 868;
 
-    // UART RX
     wire [7:0] rx_byte;
     wire       rx_byte_valid;
 
-    // UART TX
     wire        tx_active;
     wire        tx_serial;
     wire        tx_done;
@@ -25,11 +23,12 @@ module traffic_top(
     
     wire [5:0] lane1, lane2, lane3, lane4;
     
-    wire [1:0] light_1, light_2;
+    // Note: light_1 and light_2 outputs are driven by traffic_light_inst
 
     traffic_light traffic_light_inst (
         .clk(clk),
         .reset(reset),
+        .input_ready(dl_input_ready), // <--- CONNECTED HERE
         .lane1(lane1),
         .lane2(lane2),
         .lane3(lane3),
@@ -51,7 +50,7 @@ module traffic_top(
 
     result_sender u_result_sender (
         .clk(clk), .reset(reset),
-        .send_start(dl_prediction_complete),
+        .send_start(dl_input_ready),
         .light_1(light_1), .light_2(light_2),
         .tx_busy(tx_active),
         .tx_data(sender_tx_data), .tx_start(sender_tx_start),
@@ -67,8 +66,6 @@ module traffic_top(
         .rx_done(dl_input_ready)
     );
 
-    assign tx_pin       = tx_serial;
-
-
+    assign tx_pin = tx_serial;
 
 endmodule

@@ -7,23 +7,25 @@ create_clock -period 10.000 -name sys_clk_pin [get_ports clk]
 set_property PACKAGE_PIN U18 [get_ports reset]
 set_property IOSTANDARD LVCMOS33 [get_ports reset]
 
-## UART receive (USB-UART RX - directly from FTDI chip)
+## UART: PC/FTDI -> FPGA
 set_property PACKAGE_PIN B18 [get_ports rx_pin]
 set_property IOSTANDARD LVCMOS33 [get_ports rx_pin]
 
-## UART transmit (USB-UART TX - directly to FTDI chip)
+## UART: FPGA -> PC/FTDI
 set_property PACKAGE_PIN A18 [get_ports tx_pin]
 set_property IOSTANDARD LVCMOS33 [get_ports tx_pin]
 
-## LIGHT 1 (2-bit vector)
+## LIGHT 1
 set_property PACKAGE_PIN U16 [get_ports {light_1[0]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {light_1[0]}]
+
 set_property PACKAGE_PIN E19 [get_ports {light_1[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {light_1[1]}]
 
-## LIGHT 2 (2-bit vector)
+## LIGHT 2
 set_property PACKAGE_PIN V19 [get_ports {light_2[0]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {light_2[0]}]
+
 set_property PACKAGE_PIN W18 [get_ports {light_2[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {light_2[1]}]
 

@@ -5,52 +5,45 @@ import serial
 
 N_LANES = 4
 START_SIGNAL = 0xAA
-STOP_SIGNAL = 20
 
 ser = serial.Serial('COM4', 115200, timeout=2.0)
-'''
-ser = serial.Serial(
-    port='COM3',      
-    baudrate=115200,    
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,
-    timeout=1         # Read timeout in seconds
-)
-'''
+
 time.sleep(2)  # Wait for connection to stabilize
 
-def features_to_uart_bytes(features: np.ndarray) -> bytes:
+def features_to_uart_bytes(features):
     packed_byte = 0
-    for feat_j in range(N_LANES):
-        val = int(features[feat_j]) & 0x03  # Ensure value fits in 2 bits
-        shift = (N_LANES - 1 - feat_j) * 2  # Lane 0 -> shift 6, Lane 3 -> shift 0
-        packed_byte |= (val << shift)
-        
+
+    for feat_j in range(4):
+        val = int(features[feat_j])
+
+        if not 0 <= val <= 3:
+            raise ValueError(
+                f"Lane {feat_j} value {val} is outside 2-bit range 0-3"
+            )
+
+        shift = (3 - feat_j) * 2
+        packed_byte |= val << shift
+
     return bytes([packed_byte])
 
 def send_to_fpga(lane_count):
-    # Send the traffic light state to the FPGA
-    # This function should be implemented to send the data to the FPGA
     payload_bytes = features_to_uart_bytes(lane_count)
-    print(payload_bytes)
+    print("Sending:", bytes([START_SIGNAL]) + payload_bytes)
+    ser.reset_output_buffer()
     ser.write(bytes([START_SIGNAL]) + payload_bytes)
     ser.flush()
 
-
 def receive_from_fpga():
-    ser.reset_input_buffer()
     print("Listening for incoming UART data...")
-    n_expected = 2
+    n_expected = 2  # Expecting light_1 and light_2 bytes
     start = time.time()
     response = b''
-    while len(response) < n_expected and (time.time() - start) < 15.0:
-        chunk = ser.read(n_expected - len(response))
-        if chunk:
-            response += chunk
+    while len(response) < n_expected and (time.time() - start) < 3.0:
+        if ser.in_waiting > 0:
+            response += ser.read(ser.in_waiting)
+        time.sleep(0.05)
     
-    print(response)
-    
+    print("Received:", response)
     return response
 
 def main():
