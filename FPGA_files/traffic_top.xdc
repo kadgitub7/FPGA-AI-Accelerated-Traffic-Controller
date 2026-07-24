@@ -11,8 +11,8 @@ set_property IOSTANDARD LVCMOS33 [get_ports reset]
 set_property PACKAGE_PIN B18 [get_ports rx_pin]
 set_property IOSTANDARD LVCMOS33 [get_ports rx_pin]
 
-## UART: FPGA -> PC/FTDI
-set_property PACKAGE_PIN A18 [get_ports tx_pin]
+## UART: FPGA -> Arduino
+set_property PACKAGE_PIN J1 [get_ports tx_pin]
 set_property IOSTANDARD LVCMOS33 [get_ports tx_pin]
 
 ## LIGHT 1

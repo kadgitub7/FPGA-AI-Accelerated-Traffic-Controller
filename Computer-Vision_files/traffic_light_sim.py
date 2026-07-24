@@ -69,10 +69,11 @@ def main():
         next_lane_count += 1  # Increment the next lane count for the next iteration
 
         # Get the current traffic light state from the FPGA
-        traffic_light_state = receive_from_fpga()
+        # The transmission from teh FPGA is going to Arduino now
+        #traffic_light_state = receive_from_fpga()
 
         # add user controlled quit button
-        if next_lane_count == 30:
+        if next_lane_count == 60:
             break
         # Wait for a certain period before the next iteration
         time.sleep(2)  # Adjust the sleep time as needed
