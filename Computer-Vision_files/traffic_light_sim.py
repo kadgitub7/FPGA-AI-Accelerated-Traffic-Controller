@@ -70,13 +70,12 @@ def main():
 
         # Get the current traffic light state from the FPGA
         traffic_light_state = receive_from_fpga()
-        print(traffic_light_state)
 
         # add user controlled quit button
         if next_lane_count == 30:
             break
         # Wait for a certain period before the next iteration
-        time.sleep(5)  # Adjust the sleep time as needed
+        time.sleep(2)  # Adjust the sleep time as needed
     ser.close()
 
 if __name__ == "__main__":
