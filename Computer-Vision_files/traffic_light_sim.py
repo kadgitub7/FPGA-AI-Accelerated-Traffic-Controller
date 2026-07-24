@@ -6,7 +6,7 @@ import serial
 N_LANES = 4
 START_SIGNAL = 0xAA
 
-ser = serial.Serial('COM4', 115200, timeout=2.0)
+ser = serial.Serial('COM5', 115200, timeout=2.0)
 
 time.sleep(2)  # Wait for connection to stabilize
 
