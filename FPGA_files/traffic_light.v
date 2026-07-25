@@ -19,8 +19,8 @@ module traffic_light(
     reg complete;
     
     // Shortened for responsive testing with Python script loops
-    localparam [29:0] MIN_GREEN = 29'd3000000000;   // ~3s at 100MHz
-    localparam [29:0] MAX_GREEN = 30'd10000000000;  // ~10s at 100MHz
+    localparam [31:0] MIN_GREEN = 32'd300000000;   // ~3s at 100MHz
+    localparam [33:0] MAX_GREEN = 34'd1000000000;  // ~10s at 100MHz
     localparam [5:0]  SWITCH_THRESHOLD = 6'd2; 
 
     localparam [2:0] IDLE         = 3'b000,
