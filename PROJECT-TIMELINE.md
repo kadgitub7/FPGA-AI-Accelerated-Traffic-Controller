@@ -38,3 +38,10 @@ I implemented new features like min green time and starvation period so that it 
 
 ## 6. UART control
 Now that we have a working traffic light detection system we need to hook up the conputer vision section to the FPGA and the FPGA to the Arduino UNO through UART.
+
+## 7. Debugging
+First UART signals were not correctly matched. Many times the FSM design needed to be changed as timing was not correct or signals where not being passed effectively. Additionally physical wiring was a challenge. Pins needed to be specified and then connected properly. Each wire LED, and other components were tested methododically when errors arose. Once connection was made the wrong port was used and I needed to switch from COM4 to COM5. Then python file needed to be corrected because there were two while True loops which lagged the yolo v8 computer vision model. After this the lanes where wrong, the pixel boxes we initialized first were incorrect and needed to be changed.
+
+## 8. Testing
+This is the final step. Since the entire project is now fully functional, the next step is to determine a few scenarios which we can measure against the benchmark version of the traffic light.
+First I made 10 different scenarios and then measure the time it takes for the car that waits the most to get a favorable signal. I then compare these values for the regular traffic light vs the FPGA/Computer Vision traffic light.
