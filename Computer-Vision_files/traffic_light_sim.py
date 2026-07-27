@@ -7,7 +7,7 @@ import cv2 as cv
 
 N_LANES = 4
 START_SIGNAL = 0xAA
-USE_CSV = True
+USE_CSV = False
 
 ser = serial.Serial('COM5', 115200, timeout=2.0)
 
@@ -19,8 +19,8 @@ cap = cv.VideoCapture(0)
 
 lane1_box = [0,0,320,320]
 lane2_box = [320,0,639,320]
-lane3_box = [0,320,320,639]
-lane4_box = [320,320,639,639]
+lane3_box = [320,320,639,639]
+lane4_box = [0,320,320,639]
 
 lane_count_total = [0,0,0,0]
 
@@ -106,7 +106,11 @@ def main():
                     print(object, confidence)
                     print("Lane Counts: ", lane_count_current)
                 lane_count_total = lane_count_current
+                print(lane_count_total)
+                send_to_fpga(lane_count_total)
+                time.sleep(2)
 
+                '''
                 # Main loop to simulate traffic light control
                 while True:
                     # getting car counts
@@ -120,7 +124,6 @@ def main():
                             break
                         else:
                             counter += 1
-            
                     # Send the next traffic light state to the FPGA
                     send_to_fpga(lane_count)
                     next_lane_count += 1  # Increment the next lane count for the next iteration
@@ -134,7 +137,7 @@ def main():
                         break
                     # Wait for a certain period before the next iteration
                     time.sleep(2)  # Adjust the sleep time as needed
-                
+                    '''
         image = results[0].plot()
         cv.imshow('results', image)
 
