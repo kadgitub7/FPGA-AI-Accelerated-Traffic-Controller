@@ -6,34 +6,44 @@ Setup:
 - MIN_GREEN: 3s | MAX_GREEN: 10s | SWITCH_THRESHOLD: 2
 - Measurement: worst-case wait time (clock cycles and seconds) for a car on the red side to get green
 - Each experiment run once with AI controller, once with fixed-cycle (10s green / 3s yellow)
+- Scenarios use the worst possible time measurement(eg. red on your side even if you are the only one) - Therefore all of the fixed wait is always 30s because that is the duration of red signal
 
 Lane groupings: Direction 1 = Lane1 + Lane3 | Direction 2 = Lane2 + Lane4
 
 
 Exp  Lane Config (L1,L2,L3,L4)  Dir1 Total  Dir2 Total  Diff   AI Wait (s)  Fixed Wait (s)  Notes
 ---  -------------------------  ----------  ----------  ----   -----------  --------------  -----
-1    2, 2, 1, 1                 3           3           0      __________   ______________  balanced traffic, baseline
-2    0, 2, 0, 3                 0           5           5      __________   ______________  all cars on one side
-3    1, 3, 0, 3                 1           6           5      __________   ______________  heavy imbalance
-4    2, 3, 1, 1                 3           4           1      __________   ______________  just below threshold
-5    1, 3, 1, 1                 2           4           2      __________   ______________  exactly at threshold
-6    3, 1, 3, 0                 6           1           5      __________   ______________  starvation guard test
-7    0, 0, 0, 1                 0           1           1      __________   ______________  single car on empty road
-8a   0, 3, 0, 2                 0           5           5      __________   ______________  oscillating phase A
-8b   3, 0, 2, 0                 5           0           5      __________   ______________  oscillating phase B
-9    1, 3, 0, 2                 1           5           4      __________   ______________  one dominant lane
-10   3, 3, 3, 3                 6           6           0      __________   ______________  saturated and balanced
+1    2, 2, 1, 1                 3           3           0      ____3s____   ______30s_____  balanced traffic, baseline
+2    0, 2, 0, 3                 0           5           5      ____4s____   ______30s_____  all cars on one side
+3    1, 3, 0, 3                 1           6           5      ___10s____   ______30s_____  heavy imbalance
+4    2, 3, 1, 1                 3           4           1      ___10s____   ______30s_____  just below threshold
+5    1, 3, 1, 1                 2           4           2      ___10s____   ______30s_____  exactly at threshold
+6    3, 1, 3, 0                 6           1           5      ___10s____   ______30s_____  starvation guard test
+7    0, 0, 0, 1                 0           1           1      ____3s____   ______30s_____  single car on empty road
+8a   0, 3, 0, 2                 0           5           5      ____3s____   ______30s_____  oscillating phase A
+8b   3, 0, 2, 0                 5           0           5      ____3s____   ______30s_____  oscillating phase B
+9    1, 3, 0, 2                 1           5           4      ___10s____   ______30s_____  one dominant lane
+10   3, 3, 3, 3                 6           6           0      ___10s____   ______30s_____  saturated and balanced
 
-% difference in time for each scenario:
-1. 
-2. 
-3. 
-4. 
-5. 
-6. 
-7. 
-8. 
-9. 
-10. 
+% difference in time for each scenario (|(AI - Fixed)| / Fixed-Time) * 100 %:
+1. |(3-30)|/30 * 100% = 27/30 * 100 = 90% reduction
+2. |(4-30)|/30 * 100% = 26/30 * 100 = 86.67% reduction
+3. |(10-30)|/30 * 100% = 20/30 * 100 = 66.67% reduction
+4. |(10-30)|/30 * 100% = 20/30 * 100 = 66.67% reduction
+5. |(10-30)|/30 * 100% = 20/30 * 100 = 66.67% reduction
+6. |(10-30)|/30 * 100% = 20/30 * 100 = 66.67% reduction
+7. |(3-30)|/30 * 100% = 27/30 * 100 = 90% reduction
+8a. |(3-30)|/30 * 100% = 27/30 * 100 = 90% reduction
+8b. |(3-30)|/30 * 100% = 27/30 * 100 = 90% reduction
+9. |(10-30)|/30 * 100% = 20/30 * 100 = 66.67% reduction
+10. |(10-30)|/30 * 100% = 20/30 * 100 = 66.67% reduction
 
 Average % difference over all 10 scenarios:
+(Summation of all reduction percentages)/(# of reduction percentages)
+(90 + 86.67 + 66.67 + 66.67 + 66.67 + 66.67 + 90 + 90 + 90 + 66.67 + 66.67)/ 11 ~ 76.97%
+
+Therefore after conducting all experiments, the average reduction in wait time for the most disadvantaged car in the intersection if in both scenarios they start when the lights just turned red is:
+~ 76.97% reduction in wait time.
+
+Keep in mind this is the absolute worst case scenarios, to gget a more general sense multiple permutations of each test must be done at different time intervals.
+To simply showcase the immediate effect of the system this situation was derived for only testing purposes.
