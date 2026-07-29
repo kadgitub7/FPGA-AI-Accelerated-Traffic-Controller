@@ -5,7 +5,9 @@ A full-stack embedded systems project that replaces traditional fixed-cycle traf
 The system was benchmarked against a standard fixed-cycle traffic light across 11 test scenarios and achieved an average **~77% reduction in worst-case wait time**.
 
 ## Here is a quick demo video to understand how the project works
-[![Watch the video](https://www.youtube.com/vi/FnLTe4PYCGY/maxresdefault.jpg)](https://www.youtube.com/watch?v=FnLTe4PYCGY)
+
+[![Watch the video](https://img.youtube.com/vi/FnLTe4PYCGY/hqdefault.jpg)](https://www.youtube.com/watch?v=FnLTe4PYCGY)
+
 ---
 
 ## Table of Contents
